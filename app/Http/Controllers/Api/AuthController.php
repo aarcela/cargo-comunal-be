@@ -38,7 +38,6 @@ class AuthController extends Controller
         
         if ($validator->fails()) {
             return response()->json([
-                'status' => 403,
                 'message' => $validator->errors()->first(),
             ], 403);
         }
@@ -51,12 +50,10 @@ class AuthController extends Controller
         if( $user != null ){
             if( $user->estado == 'pendiente' && ( $user->role == 'conductor' || $user->role == 'solicitante' ) ){
                 return response()->json([
-                    'status' => 401,
                     'message' => 'Su cuenta se encuentra en los proceso de verificación. Una vez verficada, podrá ingresar.'
                 ], 401);
             }else if( $user->estado == 'cancelado' ){
                 return response()->json([
-                    'status' => 401,
                     'message' => 'Lo sentimos, su solicitud fue cancelada, no cuenta con la verificación para poder ingresar.'
                 ], 401);
             }
@@ -64,7 +61,6 @@ class AuthController extends Controller
 
         if (!$token=Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             return response()->json([
-                'status' => 401,
                 'message' => 'Correo electrónico o contraseña incorrecta'
             ], 401);
         }
@@ -75,7 +71,6 @@ class AuthController extends Controller
         $token->save(); 
 
         return response()->json([
-            'status' => 200,
             'user' => $user,
             'access_token' => $tokenResult->accessToken,
             'token_type'   => 'Bearer',
@@ -90,9 +85,8 @@ class AuthController extends Controller
             ->where('usuarios.id_user', '=',  $request->user()->id_user)
             ->where('usuarios.activo', '=', true)
             ->first();
-            
+
         return response()->json([
-            'status' => 200,
             'user' => $user,
         ], 200);
     }
@@ -113,7 +107,6 @@ class AuthController extends Controller
         
         if ($validator->fails()) {
             return response()->json([
-                'status' => 403,
                 'message' => $validator->errors()->first(),
             ], 403);
         }
@@ -143,7 +136,6 @@ class AuthController extends Controller
         $profile->save();
 
         return response()->json([
-            'status' => 200,
             'message' => 'Cuenta Creada'
         ], 200);
     }
