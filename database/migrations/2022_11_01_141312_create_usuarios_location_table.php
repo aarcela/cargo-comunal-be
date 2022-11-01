@@ -13,20 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('usuarios_profile', function (Blueprint $table) {
+        Schema::create('usuarios_location', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
 
-            $table->uuid('id_profile')->primary();
+            $table->uuid('id_user_location')->primary();
             $table->uuid('id_user');
-            $table->string('first_name', 16);
-            $table->string('second_name', 16)->nullable();
-            $table->string('first_surname', 16);
-            $table->string('second_surname', 16)->nullable();
-            $table->string('phone');
-            $table->string('ci', 12);
-            $table->date('fecha_nc');
+            $table->boolean('online')->default(false);
+            $table->string('latitude', 40);
+            $table->string('longitude', 40);
+            $table->time('hora_conection')->nullable();
+            $table->date('fecha_conection')->nullable();
             $table->dateTime('fecha_creado');
             $table->dateTime('fecha_editado');
 
@@ -45,6 +43,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('usuarios_profile');
+        Schema::dropIfExists('usuarios_location');
     }
 };

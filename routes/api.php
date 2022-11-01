@@ -12,4 +12,13 @@ Route::post('/register', 'App\Http\Controllers\Api\AuthController@register');
 Route::middleware('auth:api')->group(function() {
     //check auth
     Route::get('/refresh-token', 'App\Http\Controllers\Api\AuthController@check_auth');
+
+    //cerrar session usuario
+    Route::delete('logout', 'App\Http\Controllers\Api\AuthController@logout');
+
+    //Modelo Usuarios
+    Route::resource('users', App\Http\Controllers\Api\UsuariosController::class);
+
+    //Usuarios Location
+    Route::resource('user-location', App\Http\Controllers\Api\UsuariosLocationController::class);
 });

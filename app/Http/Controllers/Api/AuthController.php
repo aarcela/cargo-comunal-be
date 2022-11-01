@@ -26,6 +26,7 @@ class AuthController extends Controller
         'usuarios_profile.second_surname',
         'usuarios_profile.phone',
         'usuarios_profile.ci',
+        'usuarios_profile.fecha_nc',
         'usuarios_profile.fecha_creado', 
     ];
 
@@ -98,11 +99,12 @@ class AuthController extends Controller
             'password' => ['required', 'min:6', 'max:12'],
             'role' => ['required'],
             'first_name' => ['required', 'max:15'],
-            'second_name' => ['required', 'max:15'],
+            'second_name' => ['max:15'],
             'first_surname' => ['required', 'max:15'],
-            'second_surname' => ['required', 'max:15'],
+            'second_surname' => ['max:15'],
             'phone' => ['required', 'regex:/^[0-9]+$/', 'max:11'],
             'ci' => ['required', 'regex:/^[0-9]+$/', 'max:12', 'unique:usuarios_profile'],
+            'fecha_nc' => ['required'],
         ]);
         
         if ($validator->fails()) {
@@ -133,10 +135,19 @@ class AuthController extends Controller
         $profile->second_surname = $request->second_surname;
         $profile->phone = $request->phone;
         $profile->ci = $request->ci;
+        $profile->fecha_nc = Carbon::parse($request->fecha_nc)->format('Y-m-d');
         $profile->save();
 
         return response()->json([
             'message' => 'Cuenta Creada'
+        ], 200);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();   
+        return response()->json([
+            'message' => 'Cerraste sesión',
         ], 200);
     }
 }
