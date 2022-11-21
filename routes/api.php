@@ -21,4 +21,7 @@ Route::middleware('auth:api')->group(function() {
 
     //Usuarios Location
     Route::resource('user-location', App\Http\Controllers\Api\UsuariosLocationController::class);
+
+    //usuarios transportes 
+    Route::resource('transports', App\Http\Controllers\Api\TransportesController::class);
 });

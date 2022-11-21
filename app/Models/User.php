@@ -69,8 +69,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'fecha_creado' => 'datetime:Y-m-d',
-        'fecha_editado' => 'datetime:Y-m-d',
+        'fecha_creado' => 'datetime:d/m/Y',
+        'fecha_editado' => 'datetime:d/m/Y',
     ];
 
     protected $table = 'usuarios';
