@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Models\Profile;
 use Carbon\Carbon;
 
-class UsuariosController extends Controller
+class UserController extends Controller
 {
     public $userData = [
         'usuarios.id_user',

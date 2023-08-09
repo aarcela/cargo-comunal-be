@@ -2,24 +2,32 @@
 
 namespace Database\Factories;
 
+use App\Models\Transport;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Transport>
+ * @extends Factory
  */
 class TransportFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Transport::class;
+
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
         return [
-            'user_id' => $this->faker->unique()->randomElement(User::all()->pluck('id')->toArray()),
-            'nro_placa' => $this->faker->randomAscii,
+            'user_id' => $this->faker->randomElement(User::all()->pluck('id')->toArray()),
+            'nro_placa' => $this->faker->postcode,
             'marca' => $this->faker->city,
             'modelo' => $this->faker->colorName,
             'carnet_circulacion' => $this->faker->numberBetween([100000000, 35000000]),

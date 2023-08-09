@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
@@ -12,28 +14,13 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public $userData = [
-        'usuarios.id_user',
-        'usuarios.username',
-        'usuarios.email',
-        'usuarios.activo',
-        'usuarios.estado', // 'pendiente' | 'aprobado' | 'cancelado'
-        'usuarios.role', // "conductor" | "solicitante" | "administrador" | "analista"
-        'usuarios.ruta_image',
-        'usuarios_profile.first_name',
-        'usuarios_profile.second_name',
-        'usuarios_profile.first_surname',
-        'usuarios_profile.second_surname',
-        'usuarios_profile.phone',
-        'usuarios_profile.ci',
-        'usuarios_profile.fecha_nc',
-        'usuarios_profile.fecha_creado',
-    ];
-
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
+        dd('hola');
 
-        $validator = Validator::make($request->all(), [
+        
+
+        /*$validator = Validator::make($request->all(), [
             'email' => ['required', 'email'],
             'password' => ['required', 'min:6', 'max:12']
         ]);
@@ -85,14 +72,14 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Correo electrónico o contraseña incorrecta'
             ], 401);
-        }
+        }*/
 
 
     }
 
     public function check_auth(Request $request)
     {
-        $user = User::select($this->userData)
+        /*$user = User::select($this->userData)
             ->leftJoin('usuarios_profile', 'usuarios_profile.id_user', '=', 'usuarios.id_user')
             ->where('usuarios.id_user', '=', $request->user()->id_user)
             ->where('usuarios.activo', '=', true)
@@ -100,12 +87,12 @@ class AuthController extends Controller
 
         return response()->json([
             'user' => $user,
-        ], 200);
+        ], 200);*/
     }
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        /*$validator = Validator::make($request->all(), [
             'username' => ['required', 'regex:/^[a-zA-Z0-9_]+$/', 'max:15', 'unique:usuarios'],
             'email' => ['required', 'email', 'unique:usuarios'],
             'password' => ['required', 'min:6', 'max:12'],
@@ -152,14 +139,14 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Cuenta Creada'
-        ], 200);
+        ], 200);*/
     }
 
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();
+        /*$request->user()->token()->revoke();
         return response()->json([
             'message' => 'Cerraste sesión',
-        ], 200);
+        ], 200);*/
     }
 }

@@ -18,7 +18,7 @@ class Transport extends Model
      *
      * @var array<int, string>
      */
-    protected $table = 'locations';
+    protected $table = 'transports';
 
     /**
      * The attributes that are mass assignable.

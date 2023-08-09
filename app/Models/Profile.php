@@ -28,7 +28,7 @@ class Profile extends Model
      *
      * @var array<int, string>
      */
-    protected $table = 'locations';
+    protected $table = 'profiles';
 
     /**
      * The attributes that are mass assignable.

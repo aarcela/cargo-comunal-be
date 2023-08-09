@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -11,6 +12,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class ProfileFactory extends Factory
 {
     /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Profile::class;
+
+    /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
@@ -18,7 +26,7 @@ class ProfileFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => $this->faker->unique()->randomElement(User::all()->pluck('id')->toArray()),
+            'user_id' => $this->faker->randomElement(User::all()->pluck('id')->toArray()),
             'first_name' => $this->faker->firstName,
             'second_name' => $this->faker->firstName,
             'first_surname' => $this->faker->lastName,
