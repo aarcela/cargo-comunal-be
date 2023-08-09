@@ -16,63 +16,32 @@ class AuthController extends Controller
 {
     public function login(LoginRequest $request)
     {
-        dd('hola');
-
-        
-
-        /*$validator = Validator::make($request->all(), [
-            'email' => ['required', 'email'],
-            'password' => ['required', 'min:6', 'max:12']
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()->first(),
-            ], 403);
-        }
-
-        $user = User::select($this->userData)
-            ->leftJoin('usuarios_profile', 'usuarios_profile.id_user', '=', 'usuarios.id_user')
-            ->where('usuarios.email', '=', $request->email)
-            ->first();
-
-        if ($user != null) {
-            if ($user->estado == 'pendiente' && ($user->role == 'conductor' || $user->role == 'solicitante')) {
-                return response()->json([
-                    'message' => 'Su cuenta se encuentra en los proceso de verificación. Una vez verficada, podrá ingresar.'
-                ], 401);
-            } else if ($user->estado == 'cancelado') {
-                return response()->json([
-                    'message' => 'Lo sentimos, su solicitud fue cancelada, no cuenta con la verificación para poder ingresar.'
-                ], 401);
-            }
-        }
-
         $credentials = [
             'email' => $request->get('email'),
             'password' => $request->get('password')
         ];
 
-
-
         if (Auth::attempt($credentials)) {
+            $user = $request->user();
 
-            $tokenResult = $request->user()->createToken('PersonalAccess Client');
-            $token = $tokenResult->token;
-            $token->expires_at = Carbon::now()->addDay(1);
-            $token->save();
+            if (!$user->activo) {
+                return $this->sendError('Inactive', ['error' => 'User is inactive'], 403);
+            }
 
-            return response()->json([
-                'user' => $user,
-                'access_token' => $tokenResult->accessToken,
-                'token_type' => 'Bearer',
-            ], 200);
+            if ($user->estado == 'pendiente' && ($user->role == 'conductor' || $user->role == 'solicitante')) {
+                return $this->sendError('Su cuenta se encuentra en los proceso de verificación. Una vez verificada, podrá ingresar.');
+            } else if ($user->estado == 'cancelado') {
+                return $this->sendError('Lo sentimos, su solicitud fue cancelada, no cuenta con la verificación para poder ingresar.');
+            }
 
+            $token = $user->createToken('CargoComunalAppToken')->plainTextToken;
+            $request->merge(['token' => $token]);
+            $resource = new UserResource($user);
+
+            return $this->sendResponse($resource, 'User logged in successfully.');
         } else {
-            return response()->json([
-                'message' => 'Correo electrónico o contraseña incorrecta'
-            ], 401);
-        }*/
+            return $this->sendError('Unauthorized.', ['error' => 'Unauthorized'], 401);
+        }
 
 
     }

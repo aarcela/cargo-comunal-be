@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
         $profileAdmin->second_surname = 'Gomez';
         $profileAdmin->phone = '4269174862';
         $profileAdmin->ci = '9740401';
-        $profileAdmin->fecha_nc = Carbon::parse('2022-01-1')->format('Y-m-d');
+        $profileAdmin->fecha_nc = Carbon::parse('1995-01-1')->format('Y-m-d');
         $profileAdmin->save();
 
         $useranalyst = new User;
@@ -52,7 +52,7 @@ class UserSeeder extends Seeder
         $profileanalyst->second_surname = 'Pereira';
         $profileanalyst->phone = '4269174862';
         $profileanalyst->ci = '10980801';
-        $profileanalyst->fecha_nc = Carbon::parse('2022-01-1')->format('Y-m-d');
+        $profileanalyst->fecha_nc = Carbon::parse('1995-01-1')->format('Y-m-d');
         $profileanalyst->save();
 
     }

@@ -22,7 +22,7 @@ class InactiveUserMiddleware extends Controller
     {
         $this->user = Auth::user();
         if ($this->user !== null) {
-            if ($this->user->active === false) {
+            if ($this->user->activo === false) {
                 return $this->sendError('Inactive', ['error' => 'User is Inactive'], 403);
             }
         }

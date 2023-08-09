@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\DateCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -44,12 +45,6 @@ class User extends Authenticatable
         'ruta_image'
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -58,6 +53,18 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    protected $casts = [
+        'username' => 'integer',
+        'email' => 'string',
+        'activo' => 'string',
+        'estado' => 'string',
+        'role' => 'string',
+        'ruta_image' => 'string',
+        'created_at' => DateCast::class,
+        'updated_at' => DateCast::class,
+        'deleted_at' => DateCast::class
     ];
 
 
