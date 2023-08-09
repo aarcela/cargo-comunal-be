@@ -32,7 +32,7 @@ class TransportFactory extends Factory
             'modelo' => $this->faker->colorName,
             'carnet_circulacion' => $this->faker->numberBetween([100000000, 35000000]),
             'carga_maxima' => $this->faker->numberBetween([1000, 5000]),
-            'tipo' => $this->faker->mimeType(),
+            'tipo' => $this->faker->colorName,
             'estado' => $this->faker->randomElement(['pendiente', 'aprobado', 'cancelado']),
         ];
     }
