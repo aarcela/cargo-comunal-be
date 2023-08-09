@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Profile>
+ * @extends Factory
  */
 class ProfileFactory extends Factory
 {
@@ -17,7 +18,16 @@ class ProfileFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => $this->faker->unique()->randomElement(User::all()->pluck('id')->toArray()),
+            'first_name' => $this->faker->firstName,
+            'second_name' => $this->faker->firstName,
+            'first_surname' => $this->faker->lastName,
+            'second_surname' => $this->faker->lastName,
+            'phone' => $this->faker->phoneNumber,
+            'ci' => $this->faker->uuid,
+            'fecha_nc' => $this->faker->dateTimeBetween('-8000 days', '-6000 days'),
         ];
+
+
     }
 }

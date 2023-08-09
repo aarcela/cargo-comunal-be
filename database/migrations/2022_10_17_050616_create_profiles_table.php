@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->string('first_surname', 16)->nullable();
             $table->string('second_surname', 16)->nullable();
             $table->string('phone')->nullable();
-            $table->string('ci', 12)->nullable();
+            $table->text('ci')->nullable();
             $table->date('fecha_nc')->nullable();
             $table->timestamps();
             $table->softDeletes();

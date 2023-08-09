@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,14 @@ class TransportFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => $this->faker->unique()->randomElement(User::all()->pluck('id')->toArray()),
+            'nro_placa' => $this->faker->randomAscii,
+            'marca' => $this->faker->city,
+            'modelo' => $this->faker->colorName,
+            'carnet_circulacion' => $this->faker->numberBetween([100000000, 35000000]),
+            'carga_maxima' => $this->faker->numberBetween([1000, 5000]),
+            'tipo' => $this->faker->mimeType(),
+            'estado' => $this->faker->randomElement(['pendiente', 'aprobado', 'cancelado']),
         ];
     }
 }

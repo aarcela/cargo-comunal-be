@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Transport;
 use Illuminate\Database\Seeder;
 
 class TransportSeeder extends Seeder
@@ -12,8 +12,8 @@ class TransportSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        //
+        Transport::factory()->count(2)->create();
     }
 }
