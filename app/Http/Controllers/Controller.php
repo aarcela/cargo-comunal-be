@@ -17,11 +17,29 @@ class Controller extends BaseController
      * @param $message
      * @return JsonResponse
      */
-    public function sendResponse($result, $message): JsonResponse
+    public function sendResponse($result, $message, $code = 200): JsonResponse
     {
         $response = [
             'success' => true,
             'data' => $result,
+            'message' => $message,
+        ];
+
+        return response()->json($response, $code);
+    }
+
+    /**
+     * @param $result
+     * @param $message
+     * @param $pagination
+     * @return JsonResponse
+     */
+    public function sendIndexResponse($result, $message, $pagination): JsonResponse
+    {
+        $response = [
+            'success' => true,
+            'data' => $result,
+            'pagination' => $pagination,
             'message' => $message,
         ];
 

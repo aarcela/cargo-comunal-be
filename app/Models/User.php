@@ -20,6 +20,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property mixed $id
  * @method static find(int $id)
  * @method static create($validated)
+ * @method static where(string $string, string $string1, bool $true)
  */
 class User extends Authenticatable
 {

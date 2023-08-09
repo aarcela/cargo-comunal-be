@@ -12,33 +12,36 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Profile;
-use Carbon\Carbon;
 
 class UserController extends Controller
 {
-    public function index()
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(request $request): JsonResponse
     {
+        /* Lista de los Requests..
+            - query
+            - limit
+            - page
+            - orderBy
+            - ascending
+        */
 
-
-
-
-
-        extract(request()->only(['query', 'limit', 'page', 'orderBy', 'ascending']));
+        extract($request->only(['query', 'limit', 'page', 'orderBy', 'ascending']));
         $limit = (isset($limit) && $limit != '') ? $limit : 8;
         $page = (isset($page) && $page != 1) ? $page : 1;
         $query = isset($query) ? json_decode($query) : null;
 
         $estado = ($query != null && isset($query->estado) && $query->estado != '') ? $query->estado : "aprobado";
 
-        $records = User::select($this->userData)
-            ->leftJoin('usuarios_profile', 'usuarios_profile.id_user', '=', 'usuarios.id_user')
-            ->where('usuarios.activo', '=', true)
-            ->where('usuarios.estado', '=', $estado)
-            ->where('usuarios.role', '<>', 'administrador')
-            ->where('usuarios.role', '<>', 'analista');
+        $records = User::where('activo', '=', true)
+            ->where('estado', '=', $estado)
+            ->where('role', '<>', 'administrador')
+            ->where('role', '<>', 'analista');
 
         $count = $records->count();
         $records->limit($limit)
@@ -49,20 +52,15 @@ class UserController extends Controller
             $records->orderBy($orderBy, $direction);
         }
 
-        $results = $records->get()->toArray();
+        $results = $records->get();
+        $resource = UserResource::collection($results);
+        $pagination = [
+            'numPage' => intval($page),
+            'resultPage' => count($results),
+            'totalResult' => $count
+        ];
 
-
-        return response()->json([
-            'data' => $results,
-            'pagination' => [
-                'numPage' => intval($page),
-                'resultPage' => count($results),
-                'totalResult' => $count
-            ]
-        ], 200);
-
-
-
+        return $this->sendIndexResponse($resource, 'Usuario creado exitosamente.', $pagination);
     }
 
 
@@ -104,7 +102,7 @@ class UserController extends Controller
 
             DB::commit();
 
-            return $this->sendResponse($resource, 'Usuario creado exitosamente.');
+            return $this->sendResponse($resource, 'Usuario creado exitosamente.', 201);
 
         } catch (Exception $e) {
             DB::rollBack();
