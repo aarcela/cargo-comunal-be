@@ -10,7 +10,14 @@ Route::get('/verify', [AuthController::class, 'verify'])->name('verify');
 //Register
 Route::post('/register', 'App\Http\Controllers\Api\AuthController@register');
 
-Route::middleware('auth:api')->group(function() {
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    /** Logout Route */
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+});
+
+
+Route::middleware('auth:api')->group(function () {
     //check auth
     Route::get('/refresh-token', 'App\Http\Controllers\Api\AuthController@check_auth');
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
@@ -14,7 +15,11 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request)
+    /**
+     * @param LoginRequest $request
+     * @return JsonResponse
+     */
+    public function login(LoginRequest $request): JsonResponse
     {
         $credentials = [
             'email' => $request->get('email'),
@@ -35,10 +40,10 @@ class AuthController extends Controller
             }
 
             $token = $user->createToken('CargoComunalAppToken')->plainTextToken;
-            $request->merge(['token' => $token]);
+            request()->merge(['token' => $token]);
             $resource = new UserResource($user);
 
-            return $this->sendResponse($resource, 'User logged in successfully.');
+            return $this->sendResponse($resource, 'El usuario inició sesión de manera exitosa');
         } else {
             return $this->sendError('Unauthorized.', ['error' => 'Unauthorized'], 401);
         }
@@ -46,17 +51,14 @@ class AuthController extends Controller
 
     }
 
-    public function check_auth(Request $request)
+    /**
+     * @return JsonResponse|void
+     */
+    public function verify()
     {
-        /*$user = User::select($this->userData)
-            ->leftJoin('usuarios_profile', 'usuarios_profile.id_user', '=', 'usuarios.id_user')
-            ->where('usuarios.id_user', '=', $request->user()->id_user)
-            ->where('usuarios.activo', '=', true)
-            ->first();
-
-        return response()->json([
-            'user' => $user,
-        ], 200);*/
+        if (Auth::user() === null) {
+            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised'], 401);
+        }
     }
 
     public function register(Request $request)
@@ -111,11 +113,13 @@ class AuthController extends Controller
         ], 200);*/
     }
 
-    public function logout(Request $request)
+    /**
+     * @return JsonResponse
+     */
+    public function logout(): JsonResponse
     {
-        /*$request->user()->token()->revoke();
-        return response()->json([
-            'message' => 'Cerraste sesión',
-        ], 200);*/
+        $user = Auth::user();
+        $user->tokens()->delete();
+        return $this->sendResponse('Message', 'El usuario cerro sesión de manera exitosa');
     }
 }
