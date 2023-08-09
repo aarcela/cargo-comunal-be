@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
         $userAdmin = new User;
         $userAdmin->username = 'adminVE';
         $userAdmin->email = 'admin@admin.com';
-        $userAdmin->password = bcrypt('admin123');
+        $userAdmin->password = 'admin123';
         $userAdmin->estado = 'aprobado'; // 'pendiente' | 'aprobado' | 'cancelado'
         $userAdmin->role = 'administrador';  // "conductor" | "solicitante" | "administrador" | "analista"
         $userAdmin->save();
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
         $useranalyst = new User;
         $useranalyst->username = 'analystVE';
         $useranalyst->email = 'analist@admin.com';
-        $useranalyst->password = bcrypt('analyst123');
+        $useranalyst->password = 'analyst123';
         $useranalyst->estado = 'aprobado'; // 'pendiente' | 'aprobado' | 'cancelado'
         $useranalyst->role = 'analista'; // "conductor" | "solicitante" | "administrador" | "analista"
         $useranalyst->save();

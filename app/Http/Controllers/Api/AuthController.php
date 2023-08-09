@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Users\UserRequest;
 use App\Http\Resources\UserResource;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Models\User;
 use App\Models\Profile;
-use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -45,7 +44,7 @@ class AuthController extends Controller
 
             return $this->sendResponse($resource, 'El usuario inició sesión de manera exitosa');
         } else {
-            return $this->sendError('Unauthorized.', ['error' => 'Unauthorized'], 401);
+            return $this->sendError('Unauthorised.', ['error' => 'No autorizado'], 401);
         }
 
 
@@ -57,60 +56,40 @@ class AuthController extends Controller
     public function verify()
     {
         if (Auth::user() === null) {
-            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised'], 401);
+            return $this->sendError('Unauthorised.', ['error' => 'No Autorizado'], 401);
         }
     }
 
-    public function register(Request $request)
+    /**
+     * @param UserRequest $request
+     * @return JsonResponse
+     */
+    public function register(UserRequest $request): JsonResponse
     {
-        /*$validator = Validator::make($request->all(), [
-            'username' => ['required', 'regex:/^[a-zA-Z0-9_]+$/', 'max:15', 'unique:usuarios'],
-            'email' => ['required', 'email', 'unique:usuarios'],
-            'password' => ['required', 'min:6', 'max:12'],
-            'role' => ['required'],
-            'first_name' => ['required', 'max:15'],
-            'second_name' => ['max:15'],
-            'first_surname' => ['required', 'max:15'],
-            'second_surname' => ['max:15'],
-            'phone' => ['required', 'regex:/^[0-9]+$/', 'max:11'],
-            'ci' => ['required', 'regex:/^[0-9]+$/', 'max:12', 'unique:usuarios_profile'],
-            'fecha_nc' => ['required'],
+        if ($request->get('role') !== 'conductor' && $request->get('role') !== 'solicitante') {
+            return $this->sendError('Los valores del campo rol no son los correctos', [], 403);
+        }
+
+        /* Creamos el Usuario */
+        $user = User::create($request->validated());
+
+        /* Valores por defecto */
+        $user->update([
+            'activo' => true,
+            'estado' => 'pendiente'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()->first(),
-            ], 403);
-        }
+        /* Creamos el Profile del Usuario */
+        $profile = Profile::create($request->validated());
+        $profile->update([
+            'user_id' => $user->id
+        ]);
 
-        if ($request->role != 'conductor' && $request->role != 'solicitante') {
-            return response()->json([
-                'status' => 403,
-                'message' => 'Los valores del campo rol no son los correctos',
-            ], 403);
-        }
+        $resource = new UserResource($user);
 
-        $user = new User;
-        $user->username = $request->username;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->role = $request->role;
-        $user->save();
+        DB::commit();
 
-        $profile = new Profile;
-        $profile->id_user = $user->id_user;
-        $profile->first_name = $request->first_name;
-        $profile->second_name = $request->second_name;
-        $profile->first_surname = $request->first_surname;
-        $profile->second_surname = $request->second_surname;
-        $profile->phone = $request->phone;
-        $profile->ci = $request->ci;
-        $profile->fecha_nc = Carbon::parse($request->fecha_nc)->format('Y-m-d');
-        $profile->save();
-
-        return response()->json([
-            'message' => 'Cuenta Creada'
-        ], 200);*/
+        return $this->sendResponse($resource, 'Cuenta Creada exitosamente.');
     }
 
     /**

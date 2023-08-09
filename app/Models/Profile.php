@@ -18,6 +18,7 @@ use Webpatser\Uuid\Uuid;
  * @property mixed|string $phone
  * @property mixed|string $ci
  * @property mixed|string $fecha_nc
+ * @method static create(mixed $validated)
  */
 class Profile extends Model
 {

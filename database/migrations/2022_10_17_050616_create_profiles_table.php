@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->collation = 'utf8_unicode_ci';
 
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('first_name', 16)->nullable();
             $table->string('second_name', 16)->nullable();
             $table->string('first_surname', 16)->nullable();

@@ -18,6 +18,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property mixed|string $estado
  * @property mixed|string $role
  * @property mixed $id
+ * @method static find(int $id)
+ * @method static create($validated)
  */
 class User extends Authenticatable
 {
@@ -56,9 +58,9 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'username' => 'integer',
+        'username' => 'string',
         'email' => 'string',
-        'activo' => 'string',
+        'activo' => 'boolean',
         'estado' => 'string',
         'role' => 'string',
         'ruta_image' => 'string',
@@ -72,7 +74,7 @@ class User extends Authenticatable
     {
         parent::boot();
         static::creating(function ($user) {
-            if (!Hash::info($user->password)['algoName']) {
+            if (!Hash::check($user->password, $user->password)) {
                 $user->password = Hash::make($user->password);
             }
         });
