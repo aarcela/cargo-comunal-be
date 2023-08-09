@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Transports;
 
 use App\Concerns\Traits\FailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,12 +27,13 @@ class TransporteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nro_placa' => 'required|max:20|unique:usuarios_transportes,nro_placa',
+            'user_id' => 'required|exists:usuarios,id',
+            'nro_placa' => 'required|max:20|unique:transports,nro_placa',
             'marca' => 'required|max:20|string',
             'modelo' => 'required|max:20|string',
-            'carnet_circulacion' => 'required|max:20|unique:usuarios_transportes,carnet_circulacion',
+            'carnet_circulacion' => 'required|max:20|unique:transports,carnet_circulacion',
             'carga_maxima' => 'required|max:20',
-            'id_user' => 'required',
+            'tipo' => 'nullable|max:36'
         ];
     }
 }

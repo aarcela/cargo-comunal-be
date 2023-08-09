@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\TransportesController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     /** User Apis */
     Route::apiResource('users', UserController::class);
+
+    /** Transports Apis */
+    Route::apiResource('transports', TransportesController::class);
 });
 
 /*Route::middleware('auth:api')->group(function () {

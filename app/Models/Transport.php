@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
+/**
+ * @method static create(mixed $validated)
+ * @method static find($id)
+ * @method static whereHas(string $string, \Closure $param)
+ */
 class Transport extends Model
 {
     use HasFactory, SoftDeletes;
