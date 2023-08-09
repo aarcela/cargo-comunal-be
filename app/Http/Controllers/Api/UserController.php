@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Concerns\Classes\ModelErrors;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\TemporaryUserUpdateRequest;
 use App\Http\Requests\Users\UserRequest;
 use App\Http\Resources\UserResource;
 use Exception;
@@ -17,26 +19,13 @@ use Carbon\Carbon;
 
 class UserController extends Controller
 {
-    public $userData = [
-        'usuarios.id_user',
-        'usuarios.username',
-        'usuarios.email',
-        'usuarios.activo',
-        'usuarios.estado', // 'pendiente' | 'aprobado' | 'cancelado'
-        'usuarios.role', // "conductor" | "solicitante" | "administrador" | "analista"
-        'usuarios.ruta_image',
-        'usuarios_profile.first_name',
-        'usuarios_profile.second_name',
-        'usuarios_profile.first_surname',
-        'usuarios_profile.second_surname',
-        'usuarios_profile.phone',
-        'usuarios_profile.ci',
-        'usuarios_profile.fecha_nc',
-        'usuarios_profile.fecha_creado',
-    ];
-
     public function index()
     {
+
+
+
+
+
         extract(request()->only(['query', 'limit', 'page', 'orderBy', 'ascending']));
         $limit = (isset($limit) && $limit != '') ? $limit : 8;
         $page = (isset($page) && $page != 1) ? $page : 1;
@@ -71,6 +60,8 @@ class UserController extends Controller
                 'totalResult' => $count
             ]
         ], 200);
+
+
 
     }
 
@@ -121,26 +112,27 @@ class UserController extends Controller
         }
     }
 
-    public function update($id, Request $request)
+    public function update(TemporaryUserUpdateRequest $request, int $id): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'estado' => ['required'],
-        ]);
+        $modelErrors = new ModelErrors($id, User::class, 'Usuario');
+        $processErrorLogic = $modelErrors->processErrorLogic();
+        if ($processErrorLogic === true) {
+            try {
+                DB::beginTransaction();
+                $user = User::find($id);
+                $user->update([
+                    'estado' => $request->get('estado'),
+                ]);
+                $resource = new UserResource($user);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 403,
-                'message' => $validator->errors()->first(),
-            ], 403);
+                DB::commit();
+                return $this->sendResponse($resource, 'Usuario actualizado con exito.');
+            } catch (Exception $e) {
+                DB::rollBack();
+                return $this->sendError($e->getMessage());
+            }
+        } else {
+            return $processErrorLogic;
         }
-
-        $user = User::find($id);
-
-        $user->estado = $request->estado;
-        $user->update();
-
-        return response()->json([
-            'message' => 'Usuario Actualizado'
-        ], 200);
     }
 }
