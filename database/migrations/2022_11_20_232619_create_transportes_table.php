@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -18,25 +17,22 @@ return new class extends Migration
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
 
-            $table->uuid('id_user_transporte')->primary();
-            $table->uuid('id_user');
+            $table->id();
+            $table->unsignedBigInteger('user_id');
 
-            $table->string('nro_placa', 40);
-            $table->string('marca', 40);
-            $table->string('modelo', 40);
-            $table->string('carnet_circulacion', 40);
-            $table->string('carga_maxima', 40);
+            $table->string('nro_placa', 40)->nullable();
+            $table->string('marca', 40)->nullable();
+            $table->string('modelo', 40)->nullable();
+            $table->string('carnet_circulacion', 40)->nullable();
+            $table->string('carga_maxima', 40)->nullable();
             $table->char('tipo', 36)->nullable();
             $table->char('estado', 15)->default('pendiente'); // 'pendiente' | 'aprobado' | 'cancelado'
 
-            $table->dateTime('fecha_creado');
-            $table->dateTime('fecha_editado');
+            $table->timestamps();
+            $table->softDeletes();
 
-            $table->foreign('id_user')
-                ->references('id_user')
-                ->on('usuarios')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            /** Relaciones */
+            $table->foreign('user_id')->references('id')->on('usuarios');
         });
     }
 

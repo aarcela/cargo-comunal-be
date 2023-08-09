@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Webpatser\Uuid\Uuid;
 
-class UsuariosProfile extends Model
+class Location extends Model
 {
     use HasFactory;
     /**
@@ -14,7 +14,7 @@ class UsuariosProfile extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'id_profile';
+    protected $primaryKey = 'id_user_location';
     /**
      * Indicates if the IDs are auto-incrementing.
      *
@@ -34,30 +34,28 @@ class UsuariosProfile extends Model
      * @var array
      */
     protected $fillable = [
-        'id_profile',
+        'id_user_location',
         'id_user',
-        'first_name',
-        'second_name',
-        'first_surname',
-        'second_surname',
-        'phone',
-        'ci',
-        'fecha_nc',
-        'fecha_creado', 
-        'fecha_editado', 
+        'online',
+        'latitude',
+        'longitude',
+        'hora_conection',
+        'fecha_conection',
+        'fecha_creado',
+        'fecha_editado'
     ];
 
 
-    protected $table = 'usuarios_profile';
+    protected $table = 'usuarios_location';
 
     const CREATED_AT = 'fecha_creado';
     const UPDATED_AT = 'fecha_editado';
-    
+
     public static function boot()
     {
         parent::boot();
         self::creating(function ($model) {
-            $model->id_profile = (string) Uuid::generate(4);
+            $model->id_user_location = (string) Uuid::generate(4);
         });
     }
 }

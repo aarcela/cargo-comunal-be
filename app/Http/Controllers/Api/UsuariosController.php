@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use App\Models\UsuariosProfile;
+use App\Models\Profile;
 use Carbon\Carbon;
 
 class UsuariosController extends Controller
 {
     public $userData = [
-        'usuarios.id_user', 
+        'usuarios.id_user',
         'usuarios.username',
         'usuarios.email',
         'usuarios.activo',
@@ -26,7 +26,7 @@ class UsuariosController extends Controller
         'usuarios_profile.phone',
         'usuarios_profile.ci',
         'usuarios_profile.fecha_nc',
-        'usuarios_profile.fecha_creado',  
+        'usuarios_profile.fecha_creado',
     ];
 
     public function index()
@@ -44,7 +44,7 @@ class UsuariosController extends Controller
             ->where('usuarios.estado', '=', $estado)
             ->where('usuarios.role', '<>', 'administrador')
             ->where('usuarios.role', '<>', 'analista');
-        
+
         $count = $records->count();
         $records->limit($limit)
             ->skip($limit * ($page - 1));
@@ -65,10 +65,10 @@ class UsuariosController extends Controller
                 'totalResult' => $count
             ]
         ], 200);
-       
+
     }
 
-   
+
 
     public function store(Request $request)
     {
@@ -85,7 +85,7 @@ class UsuariosController extends Controller
             'ci' => ['required', 'regex:/^[0-9]+$/', 'max:12', 'unique:usuarios_profile'],
             'fecha_nc' => ['required'],
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 403,
@@ -110,7 +110,7 @@ class UsuariosController extends Controller
         $user->estado = 'aprobado';
         $user->save();
 
-        $profile = new UsuariosProfile;
+        $profile = new Profile;
         $profile->id_user = $user->id_user;
         $profile->first_name = $request->first_name;
         $profile->second_name = $request->second_name;
@@ -131,7 +131,7 @@ class UsuariosController extends Controller
         $validator = Validator::make($request->all(), [
             'estado' => ['required'],
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 403,

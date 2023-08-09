@@ -2,56 +2,54 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-//use Laravel\Sanctum\HasApiTokens;
-use Laravel\Passport\HasApiTokens;
-use Webpatser\Uuid\Uuid;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property mixed|string $username
+ * @property mixed|string $email
+ * @property mixed|string $password
+ * @property mixed|string $estado
+ * @property mixed|string $role
+ * @property mixed $id
+ */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-     /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'id_user';
     /**
-     * Indicates if the IDs are auto-incrementing.
+     * Table's Name
      *
-     * @var bool
+     * @var array<int, string>
      */
-    public $incrementing = false;
-    /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
+    protected $table = 'usuarios';
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
-        'id_user', 
         'username',
         'email',
         'password',
         'activo',
         'estado', // 'pendiente' | 'aprobado' | 'cancelado'
         'role', // "conductor" | "solicitante" | "administrador" | "analista"
-        'ruta_image',
-        'eliminado', 
-        'fecha_creado', 
-        'fecha_editado', 
-        'fecha_eliminado', 
+        'ruta_image'
     ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -69,20 +67,43 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'fecha_creado' => 'datetime:d/m/Y',
-        'fecha_editado' => 'datetime:d/m/Y',
+        'created_at' => 'datetime:d/m/Y',
+        'updated_at' => 'datetime:d/m/Y',
+        'deleted_at' => 'datetime:d/m/Y',
     ];
 
-    protected $table = 'usuarios';
 
-    const CREATED_AT = 'fecha_creado';
-    const UPDATED_AT = 'fecha_editado';
-    
     public static function boot()
     {
         parent::boot();
-        self::creating(function ($model) {
-            $model->id_user = (string) Uuid::generate(4);
+        static::creating(function ($user) {
+            if (!Hash::info($user->password)['algoName']) {
+                $user->password = Hash::make($user->password);
+            }
         });
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function profile(): HasOne
+    {
+        return $this->hasOne(Profile::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function location(): HasOne
+    {
+        return $this->hasOne(Location::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function transport(): HasOne
+    {
+        return $this->hasOne(Transport::class, 'user_id', 'id');
     }
 }

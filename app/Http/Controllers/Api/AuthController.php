@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use App\Models\UsuariosProfile;
+use App\Models\Profile;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     public $userData = [
-        'usuarios.id_user', 
+        'usuarios.id_user',
         'usuarios.username',
         'usuarios.email',
         'usuarios.activo',
@@ -27,16 +27,17 @@ class AuthController extends Controller
         'usuarios_profile.phone',
         'usuarios_profile.ci',
         'usuarios_profile.fecha_nc',
-        'usuarios_profile.fecha_creado', 
+        'usuarios_profile.fecha_creado',
     ];
 
     public function login(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'email'],
             'password' => ['required', 'min:6', 'max:12']
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->first(),
@@ -48,34 +49,44 @@ class AuthController extends Controller
             ->where('usuarios.email', '=', $request->email)
             ->first();
 
-        if( $user != null ){
-            if( $user->estado == 'pendiente' && ( $user->role == 'conductor' || $user->role == 'solicitante' ) ){
+        if ($user != null) {
+            if ($user->estado == 'pendiente' && ($user->role == 'conductor' || $user->role == 'solicitante')) {
                 return response()->json([
                     'message' => 'Su cuenta se encuentra en los proceso de verificación. Una vez verficada, podrá ingresar.'
                 ], 401);
-            }else if( $user->estado == 'cancelado' ){
+            } else if ($user->estado == 'cancelado') {
                 return response()->json([
                     'message' => 'Lo sentimos, su solicitud fue cancelada, no cuenta con la verificación para poder ingresar.'
                 ], 401);
             }
         }
 
-        if (!$token=Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $credentials = [
+            'email' => $request->get('email'),
+            'password' => $request->get('password')
+        ];
+
+
+
+        if (Auth::attempt($credentials)) {
+
+            $tokenResult = $request->user()->createToken('PersonalAccess Client');
+            $token = $tokenResult->token;
+            $token->expires_at = Carbon::now()->addDay(1);
+            $token->save();
+
+            return response()->json([
+                'user' => $user,
+                'access_token' => $tokenResult->accessToken,
+                'token_type' => 'Bearer',
+            ], 200);
+
+        } else {
             return response()->json([
                 'message' => 'Correo electrónico o contraseña incorrecta'
             ], 401);
         }
 
-        $tokenResult = $request->user()->createToken('Personal Access Client');
-        $token = $tokenResult->token; 
-        $token->expires_at = Carbon::now()->addDay(1);         
-        $token->save(); 
-
-        return response()->json([
-            'user' => $user,
-            'access_token' => $tokenResult->accessToken,
-            'token_type'   => 'Bearer',
-        ], 200);
 
     }
 
@@ -83,7 +94,7 @@ class AuthController extends Controller
     {
         $user = User::select($this->userData)
             ->leftJoin('usuarios_profile', 'usuarios_profile.id_user', '=', 'usuarios.id_user')
-            ->where('usuarios.id_user', '=',  $request->user()->id_user)
+            ->where('usuarios.id_user', '=', $request->user()->id_user)
             ->where('usuarios.activo', '=', true)
             ->first();
 
@@ -92,7 +103,8 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function register(Request $request){
+    public function register(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'username' => ['required', 'regex:/^[a-zA-Z0-9_]+$/', 'max:15', 'unique:usuarios'],
             'email' => ['required', 'email', 'unique:usuarios'],
@@ -106,14 +118,14 @@ class AuthController extends Controller
             'ci' => ['required', 'regex:/^[0-9]+$/', 'max:12', 'unique:usuarios_profile'],
             'fecha_nc' => ['required'],
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->first(),
             ], 403);
         }
 
-        if( $request->role != 'conductor' && $request->role != 'solicitante' ){
+        if ($request->role != 'conductor' && $request->role != 'solicitante') {
             return response()->json([
                 'status' => 403,
                 'message' => 'Los valores del campo rol no son los correctos',
@@ -127,7 +139,7 @@ class AuthController extends Controller
         $user->role = $request->role;
         $user->save();
 
-        $profile = new UsuariosProfile;
+        $profile = new Profile;
         $profile->id_user = $user->id_user;
         $profile->first_name = $request->first_name;
         $profile->second_name = $request->second_name;
@@ -145,7 +157,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();   
+        $request->user()->token()->revoke();
         return response()->json([
             'message' => 'Cerraste sesión',
         ], 200);

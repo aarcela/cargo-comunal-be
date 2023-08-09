@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use App\Models\UsuariosLocation;
+use App\Models\Location;
 use Carbon\Carbon;
 
 class UsuariosLocationController extends Controller
@@ -18,7 +18,7 @@ class UsuariosLocationController extends Controller
             'latitude' => ['required', 'max:40'],
             'longitude' => ['required', 'max:40'],
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 403,
@@ -26,7 +26,7 @@ class UsuariosLocationController extends Controller
             ], 403);
         }
 
-        UsuariosLocation::create([
+        Location::create([
             'id_user' => $request->id_user,
             'online' => true,
             'latitude' => $request->latitude,
@@ -41,7 +41,7 @@ class UsuariosLocationController extends Controller
     public function show($id)
     {
         return response()->json([
-            'data' => UsuariosLocation::where('id_user', '=', $id)->first()
+            'data' => Location::where('id_user', '=', $id)->first()
         ], 200);
     }
 
@@ -52,7 +52,7 @@ class UsuariosLocationController extends Controller
             'latitude' => ['required', 'max:40'],
             'longitude' => ['required', 'max:40'],
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 403,
@@ -60,7 +60,7 @@ class UsuariosLocationController extends Controller
             ], 403);
         }
 
-        $user = UsuariosLocation::find($id);
+        $user = Location::find($id);
 
         $user->online = $request->online === 'true' ? true : false;
         $user->latitude = $request->latitude;

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\UsuariosProfile;
+use App\Models\Profile;
 use Carbon\Carbon;
 
 class UserSeeder extends Seeder
@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $userAdmin = new User;
         $userAdmin->username = 'adminVE';
@@ -25,8 +25,8 @@ class UserSeeder extends Seeder
         $userAdmin->role = 'administrador';  // "conductor" | "solicitante" | "administrador" | "analista"
         $userAdmin->save();
 
-        $profileAdmin = new UsuariosProfile();
-        $profileAdmin->id_user = $userAdmin->id_user;
+        $profileAdmin = new Profile();
+        $profileAdmin->user_id = $userAdmin->id;
         $profileAdmin->first_name = 'Juan';
         $profileAdmin->second_name = 'Alejandro';
         $profileAdmin->first_surname = 'Parra';
@@ -36,24 +36,24 @@ class UserSeeder extends Seeder
         $profileAdmin->fecha_nc = Carbon::parse('2022-01-1')->format('Y-m-d');
         $profileAdmin->save();
 
-        $userAnalist = new User;
-        $userAnalist->username = 'analistVE';
-        $userAnalist->email = 'analist@admin.com';
-        $userAnalist->password = bcrypt('analist123');
-        $userAnalist->estado = 'aprobado'; // 'pendiente' | 'aprobado' | 'cancelado'
-        $userAnalist->role = 'analista'; // "conductor" | "solicitante" | "administrador" | "analista"
-        $userAnalist->save();
+        $useranalyst = new User;
+        $useranalyst->username = 'analystVE';
+        $useranalyst->email = 'analist@admin.com';
+        $useranalyst->password = bcrypt('analyst123');
+        $useranalyst->estado = 'aprobado'; // 'pendiente' | 'aprobado' | 'cancelado'
+        $useranalyst->role = 'analista'; // "conductor" | "solicitante" | "administrador" | "analista"
+        $useranalyst->save();
 
-        $profileAnalist = new UsuariosProfile();
-        $profileAnalist->id_user = $userAnalist->id_user;
-        $profileAnalist->first_name = 'Carlos';
-        $profileAnalist->second_name = 'Frank';
-        $profileAnalist->first_surname = 'Angulo';
-        $profileAnalist->second_surname = 'Pereira';
-        $profileAnalist->phone = '4269174862';
-        $profileAnalist->ci = '10980801';
-        $profileAnalist->fecha_nc = Carbon::parse('2022-01-1')->format('Y-m-d');
-        $profileAnalist->save();
-        
+        $profileanalyst = new Profile();
+        $profileanalyst->user_id = $useranalyst->id;
+        $profileanalyst->first_name = 'Carlos';
+        $profileanalyst->second_name = 'Frank';
+        $profileanalyst->first_surname = 'Angulo';
+        $profileanalyst->second_surname = 'Pereira';
+        $profileanalyst->phone = '4269174862';
+        $profileanalyst->ci = '10980801';
+        $profileanalyst->fecha_nc = Carbon::parse('2022-01-1')->format('Y-m-d');
+        $profileanalyst->save();
+
     }
 }

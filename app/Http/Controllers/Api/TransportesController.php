@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\UsuariosTransportes;
+use App\Http\Requests\TransporteRequest;
+use App\Http\Resources\TransportesResource;
+use App\Models\Transport;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -19,7 +21,7 @@ class TransportesController extends Controller
         'usuarios_transportes.tipo',
         'usuarios_transportes.fecha_creado AS fecha_creado_transport',
         'usuarios_transportes.estado AS estado_transporte',
-        'usuarios.id_user', 
+        'usuarios.id_user',
         'usuarios.username',
         'usuarios.email',
         'usuarios.activo',
@@ -33,24 +35,35 @@ class TransportesController extends Controller
         'usuarios_profile.phone',
         'usuarios_profile.ci',
         'usuarios_profile.fecha_nc',
-        'usuarios_profile.fecha_creado',  
+        'usuarios_profile.fecha_creado',
     ];
 
     public function index()
     {
-        extract(request()->only(['query', 'limit', 'page', 'orderBy', 'ascending']));
+        /* Lista de los Requests..
+            - query
+            - limit
+            - page
+            - orderBy
+            - ascending
+        */
+
+        /*$usuariosTransporte = UsuariosTransportes::all();
+        return $this->sendResponse(TransportesResource::collection($usuariosTransporte), 'Transportes retornados exitosamente.');*/
+
+       extract(request()->only(['query', 'limit', 'page', 'orderBy', 'ascending']));
         $limit = (isset($limit) && $limit != '') ? $limit : 8;
         $page = (isset($page) && $page != 1) ? $page : 1;
         $query = isset($query) ? json_decode($query) : null;
 
-        $estado = ( $query != null && isset($query->estado) && $query->estado != '' ) ? $query->estado : "aprobado";
+        $estado = ($query != null && isset($query->estado) && $query->estado != '') ? $query->estado : "aprobado";
 
-        $records = UsuariosTransportes::select($this->userTransportData)
-            ->leftJoin('usuarios', 'usuarios.id_user', '=', 'usuarios_transportes.id_user') 
+        $records = Transport::select($this->userTransportData)
+            ->leftJoin('usuarios', 'usuarios.id_user', '=', 'usuarios_transportes.id_user')
             ->leftJoin('usuarios_profile', 'usuarios_profile.id_user', '=', 'usuarios.id_user')
             ->where('usuarios.activo', '=', true)
             ->where('usuarios_transportes.estado', '=', $estado);
-        
+
         $count = $records->count();
         $records->limit($limit)
             ->skip($limit * ($page - 1));
@@ -62,7 +75,6 @@ class TransportesController extends Controller
 
         $results = $records->get()->toArray();
 
-
         return response()->json([
             'data' => $results,
             'pagination' => [
@@ -73,9 +85,9 @@ class TransportesController extends Controller
         ], 200);
     }
 
-    public function store(Request $request)
+    public function store(TransporteRequest $request)
     {
-        $validator = Validator::make($request->all(), [
+        /*$validator = Validator::make($request->all(), [
             'nro_placa' => ['required', 'max:20', 'unique:usuarios_transportes'],
             'marca' => ['required', 'max:20'],
             'modelo' => ['required', 'max:20'],
@@ -83,15 +95,15 @@ class TransportesController extends Controller
             'carga_maxima' => ['required', 'max:20'],
             'id_user' => ['required'],
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 403,
                 'message' => $validator->errors()->first(),
             ], 403);
-        }
+        }*/
 
-        $transporte = new UsuariosTransportes;
+        $transporte = new Transport;
         $transporte->id_user = $request->id_user;
         $transporte->nro_placa = $request->nro_placa;
         $transporte->marca = $request->marca;
@@ -101,6 +113,17 @@ class TransportesController extends Controller
 
         $transporte->save();
 
+        /*$transporte = UsuariosTransportes::create([
+            'id_user' => $request->get('id_user'),
+            'nro_placa' => $request->get('nro_placa'),
+            'marca' => $request->get('marca'),
+            'modelo' => $request->get('modelo'),
+            'carnet_circulacion' => $request->get('carnet_circulacion'),
+            'carga_maxima' => $request->get('carga_maxima'),
+        ]);
+
+        $resource = new TransportesResource($transporte);*/
+
         return response()->json([
             'message' => 'transporte Creado',
             'data' => $transporte
@@ -109,11 +132,11 @@ class TransportesController extends Controller
 
     public function show($id)
     {
-        $transporte = UsuariosTransportes::select($this->userTransportData)
-        ->leftJoin('usuarios', 'usuarios.id_user', '=', 'usuarios_transportes.id_user') 
-        ->leftJoin('usuarios_profile', 'usuarios_profile.id_user', '=', 'usuarios.id_user')
-        ->where('usuarios.activo', '=', true)
-        ->where('usuarios_transportes.id_user', '=', $id)->first();
+        $transporte = Transport::select($this->userTransportData)
+            ->leftJoin('usuarios', 'usuarios.id_user', '=', 'usuarios_transportes.id_user')
+            ->leftJoin('usuarios_profile', 'usuarios_profile.id_user', '=', 'usuarios.id_user')
+            ->where('usuarios.activo', '=', true)
+            ->where('usuarios_transportes.id_user', '=', $id)->first();
 
         return response()->json([
             'data' => $transporte
@@ -122,13 +145,13 @@ class TransportesController extends Controller
 
     public function update($id, Request $request)
     {
-        $transporte = UsuariosTransportes::find($id);
+        $transporte = Transport::find($id);
 
-        if( $transporte != null ){
+        if ($transporte != null) {
             $validator = Validator::make($request->all(), [
                 'estado' => ['required']
             ]);
-            
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 403,
@@ -143,7 +166,7 @@ class TransportesController extends Controller
                 'message' => 'transporte Actualizado',
                 'data' => $transporte
             ], 200);
-        }else{
+        } else {
             return response()->json([
                 'message' => 'este transporte no existe'
             ], 403);
