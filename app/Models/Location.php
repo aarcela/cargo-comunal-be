@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @method static create(mixed $validated)
+ * @method static where(string $string, string $string1, $id)
+ * @method static find(int $id)
+ */
 class Location extends Model
 {
     use HasFactory, SoftDeletes;

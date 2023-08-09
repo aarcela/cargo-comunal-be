@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\TransportesController;
+use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\TransporteController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,22 +20,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('users', UserController::class);
 
     /** Transports Apis */
-    Route::apiResource('transports', TransportesController::class);
+    Route::apiResource('transports', TransporteController::class);
+
+    /** Locations Apis */
+    Route::apiResource('user-location', LocationController::class);
 });
-
-/*Route::middleware('auth:api')->group(function () {
-    //check auth
-    Route::get('/refresh-token', 'App\Http\Controllers\Api\AuthController@check_auth');
-
-    //cerrar session usuario
-    Route::delete('logout', 'App\Http\Controllers\Api\AuthController@logout');
-
-    //Modelo Usuarios
-    Route::resource('users', App\Http\Controllers\Api\UserController::class);
-
-    //Usuarios Location
-    Route::resource('user-location', App\Http\Controllers\Api\UsuariosLocationController::class);
-
-    //usuarios transportes
-    Route::resource('transports', App\Http\Controllers\Api\TransportesController::class);
-});*/
