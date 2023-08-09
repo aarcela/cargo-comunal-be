@@ -60,18 +60,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'created_at' => 'datetime:d/m/Y',
-        'updated_at' => 'datetime:d/m/Y',
-        'deleted_at' => 'datetime:d/m/Y',
-    ];
-
 
     public static function boot()
     {

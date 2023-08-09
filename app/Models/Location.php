@@ -2,60 +2,55 @@
 
 namespace App\Models;
 
+use App\Casts\DateCast;
+use App\Casts\TimeCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Webpatser\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Location extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
     /**
-     * The primary key associated with the table.
+     * Table's Name
      *
-     * @var string
+     * @var array<int, string>
      */
-    protected $primaryKey = 'id_user_location';
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-    /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
+    protected $table = 'locations';
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
-        'id_user_location',
-        'id_user',
+        'user_id',
         'online',
         'latitude',
         'longitude',
-        'hora_conection',
-        'fecha_conection',
-        'fecha_creado',
-        'fecha_editado'
+        'connection_time',
+        'connection_date',
     ];
 
+    protected $casts = [
+        'user_id' => 'integer',
+        'online' => 'boolean',
+        'latitude' => 'string',
+        'longitude' => 'string',
+        'connection_time' => TimeCast::class,
+        'connection_date' => DateCast::class,
+        'created_at' => DateCast::class,
+        'updated_at' => DateCast::class,
+        'deleted_at' => DateCast::class
+    ];
 
-    protected $table = 'usuarios_location';
-
-    const CREATED_AT = 'fecha_creado';
-    const UPDATED_AT = 'fecha_editado';
-
-    public static function boot()
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
     {
-        parent::boot();
-        self::creating(function ($model) {
-            $model->id_user_location = (string) Uuid::generate(4);
-        });
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

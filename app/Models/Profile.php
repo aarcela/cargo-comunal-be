@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Casts\DateCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
 /**
@@ -18,34 +21,22 @@ use Webpatser\Uuid\Uuid;
  */
 class Profile extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
     /**
-     * The primary key associated with the table.
+     * Table's Name
      *
-     * @var string
+     * @var array<int, string>
      */
-    protected $primaryKey = 'id_profile';
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-    /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
+    protected $table = 'locations';
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
-        'id_profile',
-        'id_user',
+        'user_id',
         'first_name',
         'second_name',
         'first_surname',
@@ -53,21 +44,27 @@ class Profile extends Model
         'phone',
         'ci',
         'fecha_nc',
-        'fecha_creado',
-        'fecha_editado',
     ];
 
+    protected $casts = [
+        'user_id' => 'integer',
+        'first_name' => 'string',
+        'second_name' => 'string',
+        'first_surname' => 'string',
+        'second_surname' => 'string',
+        'phone' => 'string',
+        'ci' => 'string',
+        'fecha_nc' => DateCast::class,
+        'created_at' => DateCast::class,
+        'updated_at' => DateCast::class,
+        'deleted_at' => DateCast::class
+    ];
 
-    protected $table = 'usuarios_profile';
-
-    const CREATED_AT = 'fecha_creado';
-    const UPDATED_AT = 'fecha_editado';
-
-    public static function boot()
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
     {
-        parent::boot();
-        self::creating(function ($model) {
-            $model->id_profile = (string) Uuid::generate(4);
-        });
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
