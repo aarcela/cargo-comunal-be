@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        @env('DB_SQL_REQUIRE_PRIMARY_KEY', false);
         Schema::create('password_resets', function (Blueprint $table) {
             $table->string('email')->index();
             $table->string('token');
