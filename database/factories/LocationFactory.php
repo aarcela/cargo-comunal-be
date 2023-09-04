@@ -25,8 +25,11 @@ class LocationFactory extends Factory
      */
     public function definition()
     {
+        $notAllowedUsers = [1, 2, 3];
+        $allowedUserIds = User::whereNotIn('id', $notAllowedUsers)->pluck('id')->toArray();
+
         return [
-            'user_id' => $this->faker->randomElement(User::all()->pluck('id')->toArray()),
+            'user_id' => $this->faker->randomElement($allowedUserIds),
             'online' => $this->faker->boolean,
             'latitude' => $this->faker->latitude,
             'longitude' => $this->faker->longitude,

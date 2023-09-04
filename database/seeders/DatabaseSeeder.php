@@ -13,9 +13,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        /* Funcion para crear los usuarios iniciales */
+        CreateInitialUsersHelper();
+
         $this->call([
             UserSeeder::class,
-            //ProfileSeeder::class,
+            ProfileSeeder::class,
             TransportSeeder::class,
             LocationSeeder::class
         ]);

@@ -60,7 +60,7 @@ class UserController extends Controller
             'totalResult' => $count
         ];
 
-        return $this->sendIndexResponse($resource, 'Usuario creado exitosamente.', $pagination);
+        return $this->sendIndexResponse($resource, 'Usuarios obtenidos exitosamente.', $pagination);
     }
 
 

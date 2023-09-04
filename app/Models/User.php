@@ -21,6 +21,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static find(int $id)
  * @method static create($validated)
  * @method static where(string $string, string $string1, bool $true)
+ * @method static whereNotIn(string $string, int[] $notAllowedUsers)
  */
 class User extends Authenticatable
 {

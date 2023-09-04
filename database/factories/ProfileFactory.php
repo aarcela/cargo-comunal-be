@@ -25,8 +25,11 @@ class ProfileFactory extends Factory
      */
     public function definition()
     {
+        $notAllowedUsers = [1, 2, 3];
+        $allowedUserIds = User::whereNotIn('id', $notAllowedUsers)->pluck('id')->toArray();
+
         return [
-            'user_id' => $this->faker->randomElement(User::all()->pluck('id')->toArray()),
+            'user_id' => $this->faker->randomElement($allowedUserIds),
             'first_name' => $this->faker->firstName,
             'second_name' => $this->faker->firstName,
             'first_surname' => $this->faker->lastName,
@@ -35,7 +38,5 @@ class ProfileFactory extends Factory
             'ci' => $this->faker->uuid,
             'fecha_nc' => $this->faker->dateTimeBetween('-8000 days', '-6000 days'),
         ];
-
-
     }
 }

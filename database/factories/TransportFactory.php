@@ -25,8 +25,11 @@ class TransportFactory extends Factory
      */
     public function definition(): array
     {
+        $notAllowedUsers = [1, 2, 3];
+        $allowedUserIds = User::whereNotIn('id', $notAllowedUsers)->pluck('id')->toArray();
+
         return [
-            'user_id' => $this->faker->randomElement(User::all()->pluck('id')->toArray()),
+            'user_id' => $this->faker->randomElement($allowedUserIds),
             'nro_placa' => $this->faker->postcode,
             'marca' => $this->faker->city,
             'modelo' => $this->faker->colorName,
