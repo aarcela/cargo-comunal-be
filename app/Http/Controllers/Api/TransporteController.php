@@ -57,7 +57,7 @@ class TransporteController extends Controller
             'totalResult' => $count
         ];
 
-        return $this->sendIndexResponse($resource, 'Transporte creado exitosamente.', $pagination);
+        return $this->sendIndexResponse($resource, 'Transportes obtenidos exitosamente.', $pagination);
     }
 
     /**
