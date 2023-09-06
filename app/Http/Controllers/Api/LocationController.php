@@ -3,16 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LocationRequest;
+use App\Http\Requests\Locations\LocationRequest;
 use App\Http\Resources\LocationResource;
+use App\Models\Location;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use App\Models\User;
-use App\Models\Location;
-use Carbon\Carbon;
 
 class LocationController extends Controller
 {

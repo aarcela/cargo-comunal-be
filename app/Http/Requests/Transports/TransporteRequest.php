@@ -27,7 +27,7 @@ class TransporteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:usuarios,id',
+            'user_id' => 'required|exists:users,id',
             'nro_placa' => 'required|max:20|unique:transports,nro_placa',
             'marca' => 'required|max:20|string',
             'modelo' => 'required|max:20|string',

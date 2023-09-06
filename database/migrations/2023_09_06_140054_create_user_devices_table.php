@@ -17,6 +17,9 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->string('user_device_key')->nullable();
             $table->timestamps();
+
+            /** Relaciones */
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

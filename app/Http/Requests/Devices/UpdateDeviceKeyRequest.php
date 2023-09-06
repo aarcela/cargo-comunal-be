@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Devices;
 
 use App\Concerns\Traits\FailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class UpdateDeviceKeyRequest extends FormRequest
 {
     use FailedValidation;
 
@@ -14,7 +14,7 @@ class LoginRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -27,8 +27,8 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|max:80|exists:users,email',
-            'password' => 'required|string|min:6',
+            'user_id' => 'required|integer|exists:users,id',
+            'user_device_key' => 'required|string|unique:user_devices,user_device_key',
         ];
     }
 }

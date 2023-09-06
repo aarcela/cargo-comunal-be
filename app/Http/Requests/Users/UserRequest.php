@@ -32,8 +32,8 @@ class UserRequest extends FormRequest
             $id = intVal(request()->segment(3));
             $profile_id = User::find($id)->profile->id;
             $rules = [
-                'username' => ['sometimes', 'nullable', 'regex:/^[a-zA-Z0-9_]+$/', 'max:15', Rule::unique('usuarios', 'username')->ignore($id)],
-                'email' => ['sometimes', 'nullable', 'email', Rule::unique('usuarios', 'email')->ignore($id)],
+                'username' => ['sometimes', 'nullable', 'regex:/^[a-zA-Z0-9_]+$/', 'max:15', Rule::unique('users', 'username')->ignore($id)],
+                'email' => ['sometimes', 'nullable', 'email', Rule::unique('users', 'email')->ignore($id)],
                 'password' => 'sometimes|nullable|string',
                 'role' => 'sometimes|nullable|string',
                 'first_name' => 'sometimes|nullable|string',
@@ -50,8 +50,8 @@ class UserRequest extends FormRequest
             }*/
         } else {
             $rules = [
-                'username' => ['required', 'regex:/^[a-zA-Z0-9_]+$/', 'max:15', 'unique:usuarios,username'],
-                'email' => ['required', 'email', 'unique:usuarios'],
+                'username' => ['required', 'regex:/^[a-zA-Z0-9_]+$/', 'max:15', 'unique:users,username'],
+                'email' => ['required', 'email', 'unique:users'],
                 'password' => ['required', 'min:6'],
                 'role' => ['required'],
                 'first_name' => ['required', 'string'],

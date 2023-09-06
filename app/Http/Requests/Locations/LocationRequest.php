@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Locations;
 
 use App\Concerns\Traits\FailedValidation;
 use Illuminate\Foundation\Http\FormRequest;

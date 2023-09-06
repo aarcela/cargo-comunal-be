@@ -32,7 +32,7 @@ return new class extends Migration {
             $table->softDeletes();
 
             /** Relaciones */
-            $table->foreign('user_id')->references('id')->on('usuarios');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
