@@ -32,20 +32,20 @@ class UserController extends Controller
         $estado = $params['query'] ?? 'aprobado';
 
         // Consulta base
-        $records = User::where('activo', true)
+        $users = User::where('activo', true)
             ->where('estado', $estado)
             ->whereNotIn('role', ['administrador', 'analista']);
 
         // Contar registros antes de paginar
-        $count = $records->count();
+        $count = $users->count();
 
         // Paginar y ordenar si es necesario
         if (isset($params['orderBy'])) {
             $direction = $params['ascending'] == 1 ? 'ASC' : 'DESC';
-            $records->orderBy($params['orderBy'], $direction);
+            $users->orderBy($params['orderBy'], $direction);
         }
 
-        $results = $records->skip(($page - 1) * $limit)->take($limit)->get();
+        $results = $users->skip(($page - 1) * $limit)->take($limit)->get();
 
         // Recursos y paginación
         $resource = UserResource::collection($results);
