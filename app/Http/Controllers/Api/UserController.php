@@ -21,38 +21,33 @@ class UserController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        /* Lista de los Requests..
-            - query
-            - limit
-            - page
-            - orderBy
-            - ascending
-        */
+        // Parámetros de solicitud disponibles
+        $params = $request->only(['query', 'limit', 'page', 'orderBy', 'ascending']);
 
-        extract($request->only(['query', 'limit', 'page', 'orderBy', 'ascending']));
-        $limit = (isset($limit) && $limit != '') ? $limit : 8;
-        $page = (isset($page) && $page != 1) ? $page : 1;
-        $query = isset($query) ? json_decode($query) : null;
+        // Establecer valores predeterminados si están ausentes o vacíos
+        $limit = $params['limit'] ?? 8;
+        $page = $params['page'] ?? 1;
+        $estado = $params['query'] ?? 'aprobado';
 
-        $estado = ($query != null && isset($query->estado) && $query->estado != '') ? $query->estado : "aprobado";
+        // Consulta base
+        $records = User::where('activo', true)
+            ->where('estado', $estado)
+            ->whereNotIn('role', ['administrador', 'analista']);
 
-        $records = User::where('activo', '=', true)
-            ->where('estado', '=', $estado)
-            ->where('role', '<>', 'administrador')
-            ->where('role', '<>', 'analista');
-
+        // Contar registros antes de paginar
         $count = $records->count();
-        $records->limit($limit)
-            ->skip($limit * ($page - 1));
 
-        if (isset($orderBy)) {
-            $direction = $ascending == 1 ? 'ASC' : 'DESC';
-            $records->orderBy($orderBy, $direction);
+        // Paginar y ordenar si es necesario
+        if (isset($params['orderBy'])) {
+            $direction = $params['ascending'] == 1 ? 'ASC' : 'DESC';
+            $records->orderBy($params['orderBy'], $direction);
         }
 
-        $results = $records->get();
+        $results = $records->skip(($page - 1) * $limit)->take($limit)->get();
+
+        // Recursos y paginación
         $resource = UserResource::collection($results);
         $pagination = [
             'numPage' => intval($page),
