@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Devices\UpdateDeviceKeyRequest;
-use App\Http\Resources\Users\UserDeviceResource;
+use App\Http\Resources\UserDeviceResource;
 use App\Models\UserDevice;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
