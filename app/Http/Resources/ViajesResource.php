@@ -20,6 +20,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $longitud_origen
  * @property mixed $latitud_destino
  * @property mixed $id
+ * @property mixed $longitud_destino
  */
 class ViajesResource extends JsonResource
 {
@@ -34,15 +35,16 @@ class ViajesResource extends JsonResource
         return [
             "id" => $this->id,
             "user" => $this->user_id ? new UserResource($this->user) : null,
-            "transport" => $this->transport_id ? new TransportesResource($this->transport) : null ,
-            "ruta" => $this->ruta ,
+            "transport" => $this->transport_id ? new TransportesResource($this->transport) : null,
+            "ruta" => $this->ruta,
             "tiempo" => $this->tiempo,
             "hora" => $this->hora,
             "peso" => $this->peso,
             "status" => $this->status,
             "latitud_origen" => $this->latitud_origen,
             "longitud_origen" => $this->longitud_origen,
-            "latitud_destino" => $this->latitud_destino
+            "latitud_destino" => $this->latitud_destino,
+            "longitud_destino" => $this->longitud_destino
         ];
     }
 }
