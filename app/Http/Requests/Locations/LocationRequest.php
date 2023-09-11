@@ -28,14 +28,14 @@ class LocationRequest extends FormRequest
     {
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $rules = [
-                'user_id' => 'required|max:40|exists:usuarios,id',
+                'user_id' => 'required|exists:usuarios,id',
                 'online' => 'required|boolean',
                 'latitude' => 'required|string|max:40',
                 'longitude' => 'required|string|max:40',
             ];
         } else {
             $rules = [
-                'user_id' => 'required|max:40|exists:usuarios,id',
+                'user_id' => 'required|exists:usuarios,id',
                 'latitude' => 'required|string|max:40',
                 'longitude' => 'required|string|max:40',
             ];

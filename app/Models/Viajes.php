@@ -45,8 +45,6 @@ class Viajes extends Model
     ];
 
     protected $casts = [
-
-
         'user_id' => 'integer',
         'transport_id' => 'integer',
         'ruta' => 'string',
@@ -71,7 +69,7 @@ class Viajes extends Model
     /**
      * @return BelongsTo
      */
-    public function transpot(): BelongsTo
+    public function transport(): BelongsTo
     {
         return $this->belongsTo(Transport::class, 'transport_id');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Viajes;
 
+use App\Concerns\Traits\FailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -9,6 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class ViajeUpdateStatusRequest extends FormRequest
 {
+    use FailedValidation;
     /**
      * Determine if the user is authorized to make this request.
      *

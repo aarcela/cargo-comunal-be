@@ -94,10 +94,10 @@ class ViajesController extends Controller
     {
         $viajes = Viajes::whereHas('user', function ($query) {
             $query->where('activo', '=', true);
-        })->where('user_id', '=', $id)->first();
+        })->where('id', '=', $id)->first();
 
         if ($viajes === null) {
-            return response()->json('El viaje asociado al usuario no existe');
+            return $this->sendError('La solicitud de viaje no existe');
         }
 
         $resource = new ViajesResource($viajes);
@@ -161,18 +161,18 @@ class ViajesController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-            try {
-                DB::beginTransaction();
+        try {
+            DB::beginTransaction();
 
-                $viaje = Viajes::find($id);
-                $viaje->delete();
+            $viaje = Viajes::find($id);
+            $viaje->delete();
 
-                DB::commit();
-                return $this->sendResponse([], 'Viaje eliminado con exito.');
-            } catch (Exception $e) {
-                DB::rollBack();
-                return $this->sendError($e->getMessage());
-            }
+            DB::commit();
+            return $this->sendResponse([], 'Viaje eliminado con exito.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
+        }
 
     }
 }

@@ -51,7 +51,7 @@ class LocationController extends Controller
         $transporte = Location::where('user_id', '=', $id)->first();
 
         if ($transporte === null) {
-            $this->sendError('La Localización asociado al usuario no existe');
+            return $this->sendError('La Localización asociado al usuario no existe', []);
         }
 
         $resource = new LocationResource($transporte);

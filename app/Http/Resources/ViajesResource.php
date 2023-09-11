@@ -10,7 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed $user_id
  * @property mixed $user
  * @property mixed $transport_id
- * @property mixed $transpot
+ * @property mixed $transport
  * @property mixed $ruta
  * @property mixed $tiempo
  * @property mixed $hora
@@ -33,8 +33,8 @@ class ViajesResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "user_id" => $this->user_id ? new UserResource($this->user) : null ,
-            "transport_id" => $this->transport_id ? new TransportesResource($this->transpot) : null ,
+            "user" => $this->user_id ? new UserResource($this->user) : null,
+            "transport" => $this->transport_id ? new TransportesResource($this->transport) : null ,
             "ruta" => $this->ruta ,
             "tiempo" => $this->tiempo,
             "hora" => $this->hora,
