@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ProfileSeeder::class,
             TransportSeeder::class,
-            LocationSeeder::class
+            LocationSeeder::class,
+            ViajesSeeder::class
         ]);
     }
 }
