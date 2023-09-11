@@ -23,36 +23,38 @@ class UserController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        // Parámetros de solicitud disponibles
-        $params = $request->only(['query', 'limit', 'page', 'orderBy', 'ascending']);
+        /* // Parámetros de solicitud disponibles
+         $params = $request->only(['query', 'limit', 'page', 'orderBy', 'ascending']);
 
-        // Establecer valores predeterminados si están ausentes o vacíos
-        $limit = $params['limit'] ?? 8;
-        $page = $params['page'] ?? 1;
-        $estado = $params['query'] ?? 'aprobado';
+         // Establecer valores predeterminados si están ausentes o vacíos
+         $limit = $params['limit'] ?? 8;
+         $page = $params['page'] ?? 1;
+         $estado = $params['query'] ?? 'aprobado';
 
-        // Consulta base
-        $users = User::where('activo', true)
-            ->where('estado', $estado)
-            ->whereNotIn('role', ['administrador', 'analista']);
+         // Consulta base
+         $users = User::where('activo', true)
+             ->where('estado', $estado)
+             ->whereNotIn('role', ['administrador', 'analista']);
 
-        // Contar registros antes de paginar
-        $count = $users->count();
+         // Contar registros antes de paginar
+         $count = $users->count();
 
-        // Paginar y ordenar si es necesario
-        if (isset($params['orderBy'])) {
-            $direction = $params['ascending'] == 1 ? 'ASC' : 'DESC';
-            $users->orderBy($params['orderBy'], $direction);
-        }
+         // Paginar y ordenar si es necesario
+         if (isset($params['orderBy'])) {
+             $direction = $params['ascending'] == 1 ? 'ASC' : 'DESC';
+             $users->orderBy($params['orderBy'], $direction);
+         }
 
-        $results = $users->skip(($page - 1) * $limit)->take($limit)->get();
+         $results = $users->skip(($page - 1) * $limit)->take($limit)->get();*/
+
+        $results = User::all();
 
         // Recursos y paginación
         $resource = UserResource::collection($results);
         $pagination = [
-            'numPage' => intval($page),
-            'resultPage' => count($results),
-            'totalResult' => $count
+            'numPage' => null,
+            'resultPage' => null,
+            'totalResult' => null
         ];
 
         return $this->sendIndexResponse($resource, 'Usuarios obtenidos exitosamente.', $pagination);

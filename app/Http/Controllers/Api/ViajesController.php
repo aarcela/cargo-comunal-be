@@ -23,7 +23,7 @@ class ViajesController extends Controller
     public function index(Request $request): JsonResponse
     {
 
-        // Parámetros de solicitud disponibles
+        /*// Parámetros de solicitud disponibles
         $params = $request->only(['query', 'limit', 'page', 'orderBy', 'ascending']);
 
         // Establecer valores predeterminados si están ausentes o vacíos
@@ -45,14 +45,16 @@ class ViajesController extends Controller
             $viajes->orderBy($params['orderBy'], $direction);
         }
 
-        $results = $viajes->skip(($page - 1) * $limit)->take($limit)->get();
+        $results = $viajes->skip(($page - 1) * $limit)->take($limit)->get();*/
+
+        $results = Viajes::all();
 
         // Recursos y paginación
         $resource = ViajesResource::collection($results);
         $pagination = [
-            'numPage' => intval($page),
-            'resultPage' => count($results),
-            'totalResult' => $count
+            'numPage' => null,
+            'resultPage' => null,
+            'totalResult' => null
         ];
 
         return $this->sendIndexResponse($resource, 'Viajes obtenidos exitosamente.', $pagination);

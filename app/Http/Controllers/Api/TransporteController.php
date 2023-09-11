@@ -20,7 +20,7 @@ class TransporteController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        // Parámetros de solicitud disponibles
+        /*// Parámetros de solicitud disponibles
         $params = $request->only(['query', 'limit', 'page', 'orderBy', 'ascending']);
 
         // Establecer valores predeterminados si están ausentes o vacíos
@@ -42,14 +42,21 @@ class TransporteController extends Controller
             $transports->orderBy($params['orderBy'], $direction);
         }
 
-        $results = $transports->skip(($page - 1) * $limit)->take($limit)->get();
+        $results = $transports->skip(($page - 1) * $limit)->take($limit)->get();*/
+
+        $results = Transport::all();
 
         // Recursos y paginación
         $resource = TransportesResource::collection($results);
-        $pagination = [
+        /*$pagination = [
             'numPage' => intval($page),
             'resultPage' => count($results),
             'totalResult' => $count
+        ];*/
+        $pagination = [
+            'numPage' => null,
+            'resultPage' => null,
+            'totalResult' => null
         ];
 
         return $this->sendIndexResponse($resource, 'Transportes obtenidos exitosamente.', $pagination);
