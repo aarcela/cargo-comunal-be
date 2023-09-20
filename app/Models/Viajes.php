@@ -41,7 +41,8 @@ class Viajes extends Model
         'latitud_origen',
         'longitud_origen',
         'latitud_destino',
-        'longitud_destino'
+        'longitud_destino',
+        'cantidad_rechazos'
     ];
 
     protected $casts = [
@@ -55,7 +56,8 @@ class Viajes extends Model
         'latitud_origen' => 'string',
         'longitud_origen' => 'string',
         'latitud_destino' => 'string',
-        'longitud_destino' => 'string'
+        'longitud_destino' => 'string',
+        'cantidad_rechazos' => 'integer'
     ];
 
     /**

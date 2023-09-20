@@ -136,17 +136,32 @@ class ViajesController extends Controller
 
     public function updateStatus($id, ViajeUpdateStatusRequest $request): JsonResponse
     {
-
         try {
             DB::beginTransaction();
 
             $viajes = Viajes::find($id);
 
-            $viajes->update($request->validated());
-            $resource = new ViajesResource($viajes);
+            if ($viajes->status === 'cancelado') {
+                if ($viajes->cantidad_rechazos < 2) {
+                    $viajes->update([
+                        'cantidad_rechazos' => $viajes->cantidad_rechazos + 1,
+                    ]);
+                }else{
+                    $viajes->update(['status' => 'pendiente']);
+                    DB::commit();
+                    return $this->sendResponse([], 'asignar status manualmente');
+                }
+
+                $resource = [
+                    'cantidad_rechazos' => $viajes->cantidad_rechazos
+                ];
+                DB::commit();
+                return $this->sendResponse($resource, 'cantidad de rechazos');
+            }
+                $viajes->update($request->validated());
+                $resource = new ViajesResource($viajes);
 
             DB::commit();
-
             return $this->sendResponse($resource, 'Estado actualizado exitosamente.');
         } catch (Exception $e) {
             DB::rollBack();
