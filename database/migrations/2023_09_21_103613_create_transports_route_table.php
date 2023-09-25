@@ -17,8 +17,10 @@ return new class extends Migration
             $table->unsignedBigInteger('transport_id');
             $table->unsignedBigInteger('route_id');
 
-            // Create a composite unique key
-            $table->unique(['transport_id', 'route_id']);
+            // Ignore the primary key constraint.
+            $table->engine('InnoDB');
+            $table->charset = 'utf8mb4';
+            $table->collation = 'utf8mb4_unicode_ci';
         });
     }
 
