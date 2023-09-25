@@ -3,7 +3,9 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\RouteController;
 use App\Http\Controllers\Api\TransporteController;
+use App\Http\Controllers\Api\TransportsRouteController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ViajesController;
 use Illuminate\Support\Facades\Route;
@@ -30,11 +32,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     /** Transports Apis */
     Route::apiResource('transports', TransporteController::class);
+    Route::post('transports/assign_routes', [TransportsRouteController::class, 'assign_routes'])->name('assign_routes');
 
     /** Locations Apis */
+    Route::apiResource('user-location', LocationController::class);
     Route::apiResource('user-location', LocationController::class);
 
     /** Viajes Apis */
     Route::apiResource('viajes', ViajesController::class);
     Route::post('viajes/updateStatus/{id}', [ViajesController::class, 'updateStatus'])->name('updateStatus');
+
+    /** Routes Apis */
+    Route::apiResource('routes', RouteController::class);
 });
