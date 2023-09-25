@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static create(mixed $validated)
  * @method static find($id)
  * @method static whereHas(string $string, \Closure $param)
+ * @method static get()
  */
 class Transport extends Model
 {

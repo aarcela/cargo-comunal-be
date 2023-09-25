@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class TransportsRoute extends Model
@@ -32,5 +33,11 @@ class TransportsRoute extends Model
         'route_id' => 'integer',
     ];
 
-
+    /**
+     * @return BelongsTo
+     */
+    public function transport(): BelongsTo
+    {
+        return $this->belongsTo(Transport::class, 'transport_id');
+    }
 }

@@ -21,7 +21,9 @@ class DatabaseSeeder extends Seeder
             ProfileSeeder::class,
             TransportSeeder::class,
             LocationSeeder::class,
-            ViajesSeeder::class
+            ViajesSeeder::class,
+            RouteSeeder::class,
+            TransportRouteSeeder::class
         ]);
     }
 }

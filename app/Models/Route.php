@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static create(mixed $validated)
  * @method static where(string $string, string $string1, int $id)
  * @method static find(int $id)
+ * @method static select(string $string)
  */
 class Route extends Model
 {
@@ -38,4 +40,11 @@ class Route extends Model
         'description' => 'string'
     ];
 
+    /**
+     * @return HasOne
+     */
+    public function transport(): HasOne
+    {
+        return $this->hasOne(TransportsRoute::class, 'route_id', 'id');
+    }
 }
