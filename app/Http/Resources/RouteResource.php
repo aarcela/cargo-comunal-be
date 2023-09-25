@@ -25,8 +25,7 @@ class RouteResource extends JsonResource
         return [
             "id" => $this->id,
             "nombre" => $this->nombre,
-            "description" => $this->description,
-            "transporte" => $this->transport ? new TransportesResource($this->transport->transport) : null,
+            "description" => $this->description
         ];
     }
 }

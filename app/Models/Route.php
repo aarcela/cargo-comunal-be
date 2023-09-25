@@ -39,12 +39,4 @@ class Route extends Model
         'nombre' => 'string',
         'description' => 'string'
     ];
-
-    /**
-     * @return HasOne
-     */
-    public function transport(): HasOne
-    {
-        return $this->hasOne(TransportsRoute::class, 'route_id', 'id');
-    }
 }
