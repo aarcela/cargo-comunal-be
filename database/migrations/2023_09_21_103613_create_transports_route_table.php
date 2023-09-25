@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('route_id');
 
             // Ignore the primary key constraint.
-            $table->engine('InnoDB');
+            $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
         });
