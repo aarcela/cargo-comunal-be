@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('transport_id');
             $table->unsignedBigInteger('route_id');
 
-            // Set the ENGINE option to MyISAM
-            $table->engine = 'MyISAM';
+            // Create a composite unique key
+            $table->unique(['transport_id', 'route_id']);
         });
     }
 
