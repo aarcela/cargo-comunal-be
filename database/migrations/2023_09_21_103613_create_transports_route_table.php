@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new class extends Pivot
 {
     /**
      * Run the migrations.
@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('transports_route', function (Blueprint $table) {
             $table->unsignedBigInteger('transport_id');
             $table->unsignedBigInteger('route_id');
-
         });
     }
 
