@@ -17,7 +17,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
-
+            $table->id();
             $table->unsignedBigInteger('transport_id');
             $table->unsignedBigInteger('route_id');
         });
