@@ -14,13 +14,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transports_route', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->charset = 'utf8';
+            $table->collation = 'utf8_unicode_ci';
+
             $table->unsignedBigInteger('transport_id');
             $table->unsignedBigInteger('route_id');
-
-            // Ignore the primary key constraint.
-            $table->engine = 'InnoDB';
-            $table->charset = 'utf8mb4';
-            $table->collation = 'utf8mb4_unicode_ci';
         });
     }
 
