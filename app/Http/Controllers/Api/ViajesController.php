@@ -68,11 +68,11 @@ class ViajesController extends Controller
      * @return jsonResponse
      */
     public function store(ViajesRequest $request): JsonResponse
-    { 
+    {
         try {
             DB::beginTransaction();
 
-            /* Creamos el Usuario */
+            /* Creamos el Viaje */
             $viajes = Viajes::create($request->validated());
             $resource = new ViajesResource($viajes);
 

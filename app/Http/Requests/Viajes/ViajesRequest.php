@@ -43,7 +43,7 @@ class ViajesRequest extends FormRequest
         } else {
             $rules = [
                 'user_id' => 'required|max:40|exists:users,id',
-                'transport_id' => 'required|max:40|exists:transports,id',
+                'transport_id' => 'nullable|max:40|exists:transports,id',
                 'ruta' => 'required|string',
                 'tiempo' => 'required|string',
                 'hora' => 'nullable',
