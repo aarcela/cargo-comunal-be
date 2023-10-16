@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Viajes\ViajesRequest;
 use App\Http\Requests\Viajes\ViajeUpdateStatusRequest;
 use App\Http\Resources\ViajesResource;
+use App\Models\Transport;
+use App\Models\UserDevice;
 use App\Models\Viajes;
 use Exception;
 use Illuminate\Http\Request;
@@ -76,9 +78,37 @@ class ViajesController extends Controller
             $viajes = Viajes::create($request->validated());
             $resource = new ViajesResource($viajes);
 
+
+            /** El siguiente proceso se encargará de buscar a todos los transportes, extraer el user_id
+             *  y buscar los device_key de los mismos, para un envio masivo de notificaciones
+             */
+
+            $transportista_ids = Transport::select('user_id', 'estado')
+                /*->where('estado', 'aprobado') */ // Será a futuro donde solo los aprobados se les enviara la notificacion
+                ->get()
+                ->pluck('user_id');
+
+            $device_keys = UserDevice::whereIn('user_id', $transportista_ids)->pluck('user_device_key')->all();
+            request()->request->add(['deviceKeys' => $device_keys]);
+            $data = [
+                "notification" => [
+                    "body" => 'solicitud de viaje para.. *ruta*',
+                    "title" => 'Nueva solicitud de viaje'
+                ],
+                "priority" => 'high',
+                "data" => [
+                    "product" => 'Viaje para la ruta correspondiente'
+                ]
+            ];
+            request()->request->add(['notification' => $data['notification']]);
+            request()->request->add(['priority' => $data['priority']]);
+            request()->request->add(['data' => $data['data']]);
+
+            $push = app('App\Http\Controllers\Api\DeviceController')->push($request);
+
             DB::commit();
 
-            return $this->sendResponse($resource, 'Viaje creado exitosamente.', 201);
+            return $this->sendResponse([$resource, $push], 'Viaje creado exitosamente.', 201);
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -146,7 +176,7 @@ class ViajesController extends Controller
                     $viajes->update([
                         'cantidad_rechazos' => $viajes->cantidad_rechazos + 1,
                     ]);
-                }else{
+                } else {
                     $viajes->update(['status' => 'pendiente']);
                     DB::commit();
                     return $this->sendResponse([], 'asignar status manualmente');
@@ -158,8 +188,8 @@ class ViajesController extends Controller
                 DB::commit();
                 return $this->sendResponse($resource, 'cantidad de rechazos');
             }
-                $viajes->update($request->validated());
-                $resource = new ViajesResource($viajes);
+            $viajes->update($request->validated());
+            $resource = new ViajesResource($viajes);
 
             DB::commit();
             return $this->sendResponse($resource, 'Estado actualizado exitosamente.');

@@ -63,7 +63,14 @@ class DeviceController extends Controller
         curl_close($ch);
         // FCM response
 
-        return $this->sendResponse([], 'Notificación Push enviada exitosamente!');
+        $decodedJson = json_decode($result);
+        if ($decodedJson->failure === 1) {
+            return $this->sendError('El envio de la Notificacion Push fallo!', array($decodedJson));
+        } else {
+            return $this->sendResponse($decodedJson, 'Notificación Push enviada exitosamente!');
+        }
+
+
     }
 
 
