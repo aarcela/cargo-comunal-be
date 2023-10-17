@@ -83,7 +83,7 @@ class ViajesController extends Controller
              *  y buscar los device_key de los mismos, para un envio masivo de notificaciones
              */
 
-            $transportista_ids = Transport::select('user_id', 'estado')
+            $transportista_ids = Transport::select('user_id')
                 /*->where('estado', 'aprobado') */ // Será a futuro donde solo los aprobados se les enviara la notificacion
                 ->get()
                 ->pluck('user_id');
@@ -197,7 +197,6 @@ class ViajesController extends Controller
             DB::rollBack();
             return $this->sendError($e->getMessage());
         }
-
     }
 
     /**
