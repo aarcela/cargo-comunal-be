@@ -14,6 +14,7 @@ class DeviceController extends Controller
 
     public function push(Request $request): JsonResponse
     {
+
         /**
          * Variables del request
          *  - Device Keys
@@ -37,6 +38,7 @@ class DeviceController extends Controller
         ];
 
         $encodedData = json_encode($data);
+
 
         $headers = [
             'Authorization:key=' . $serverKey,

@@ -88,27 +88,31 @@ class ViajesController extends Controller
                 ->get()
                 ->pluck('user_id');
 
-            $device_keys = UserDevice::whereIn('user_id', $transportista_ids)->pluck('user_device_key')->all();
-            request()->request->add(['deviceKeys' => $device_keys]);
-            $data = [
-                "notification" => [
-                    "body" => 'solicitud de viaje para.. *ruta*',
-                    "title" => 'Nueva solicitud de viaje'
-                ],
-                "priority" => 'high',
-                "data" => [
-                    "product" => 'Viaje para la ruta correspondiente'
-                ]
-            ];
-            request()->request->add(['notification' => $data['notification']]);
-            request()->request->add(['priority' => $data['priority']]);
-            request()->request->add(['data' => $data['data']]);
 
-            $push = app('App\Http\Controllers\Api\DeviceController')->push($request);
+            $device_keys = UserDevice::whereIn('user_id', $transportista_ids)->pluck('user_device_key')->all();
+
+            if (!empty($device_keys)) {
+                request()->request->add(['deviceKeys' => $device_keys]);
+                $data = [
+                    "notification" => [
+                        "body" => 'solicitud de viaje para.. *ruta*',
+                        "title" => 'Nueva solicitud de viaje'
+                    ],
+                    "priority" => 'high',
+                    "data" => [
+                        "product" => 'Viaje para la ruta correspondiente'
+                    ]
+                ];
+                request()->request->add(['notification' => $data['notification']]);
+                request()->request->add(['priority' => $data['priority']]);
+                request()->request->add(['data' => $data['data']]);
+
+                $push = app('App\Http\Controllers\Api\DeviceController')->push($request);
+            }
 
             DB::commit();
 
-            return $this->sendResponse([$resource, $push], 'Viaje creado exitosamente.', 201);
+            return $this->sendResponse([$resource, $push ?? 'No se ejecuto el envio de notificaciones'], 'Viaje creado exitosamente.', 201);
 
         } catch (Exception $e) {
             DB::rollBack();
