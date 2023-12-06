@@ -19,21 +19,41 @@ class HomeController extends Controller
         $allViajes = Viajes::all();
         $allTransportes = Transport::all();
 
+        /** User Solicitantes */
         $countUsersSolicitantes = $allUsers->where('role', 'solicitante')->count();
-        $countUsersConductores = $allUsers->where('role', 'conductor')->count();
+        $countUsersSolicitantesAprobados = $allUsers->where('role', 'solicitante')
+            ->where('estado', 'aprobado')
+            ->count();
+        $countUsersSolicitantesCancelados = $allUsers->where('role', 'solicitante')
+            ->where('estado', 'cancelado')
+            ->count();
 
+        /** User Conductores */
+        $countUsersConductores = $allUsers->where('role', 'conductor')->count();
+        $countUsersConductoresAprobados = $allUsers->where('role', 'conductor')
+            ->where('estado', 'aprobado')
+            ->count();
+        $countUsersConductoresCancelados = $allUsers->where('role', 'conductor')
+            ->where('estado', 'cancelado')
+            ->count();
+
+        /** Viajes */
         $countViajesAprobados = $allViajes->where('status', 'aprobado')->count();
         $countViajesPendientes = $allViajes->where('status', 'pendiente')->count();
         $countViajesCancelados = $allViajes->where('status', 'cancelad0')->count();
 
-
+        /** Transportistas */
         $countTransportesAprobados = $allTransportes->where('estado', 'aprobado')->count();
         $countTransportesPendientes = $allTransportes->where('estado', 'pendiente')->count();
 
-
+        /** Resource todos */
         $resource = collect([
-            'solicitantes' => $countUsersSolicitantes,
-            'conductores' => $countUsersConductores,
+            'user_solicitantes' => $countUsersSolicitantes,
+            'user_solicitantes_aprobados' => $countUsersSolicitantesAprobados,
+            'user_solicitantes_cancelados' => $countUsersSolicitantesCancelados,
+            'user_conductores' => $countUsersConductores,
+            'user_conductores_aprobados' => $countUsersConductoresAprobados,
+            'user_conductores_cancelados' => $countUsersConductoresCancelados,
             'viajes_aprobados' => $countViajesAprobados,
             'viajes_pendientes' => $countViajesPendientes,
             'viajes_cancelados' => $countViajesCancelados,
