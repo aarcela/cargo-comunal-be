@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DeviceController;
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\RouteController;
 use App\Http\Controllers\Api\TransporteController;
@@ -19,6 +20,11 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::group(['middleware' => ['auth:sanctum']], function () {
     /** Logout Route */
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    /* Home Routes */
+    Route::group(['prefix' => 'home/', 'as' => 'home.'], function ($router) {
+        $router->get('/', [HomeController::class, 'home'])->name('index');
+    });
 
     Route::group(['prefix' => 'devices/', 'as' => 'devices.'], function ($router) {
         $router->post('/push', [DeviceController::class, 'push'])->name('push');
