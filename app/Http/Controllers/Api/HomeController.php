@@ -24,6 +24,9 @@ class HomeController extends Controller
         $countUsersSolicitantesAprobados = $allUsers->where('role', 'solicitante')
             ->where('estado', 'aprobado')
             ->count();
+        $countUsersSolicitantesPendientes = $allUsers->where('role', 'solicitante')
+            ->where('estado', 'pendiente')
+            ->count();
         $countUsersSolicitantesCancelados = $allUsers->where('role', 'solicitante')
             ->where('estado', 'cancelado')
             ->count();
@@ -32,6 +35,9 @@ class HomeController extends Controller
         $countUsersConductores = $allUsers->where('role', 'conductor')->count();
         $countUsersConductoresAprobados = $allUsers->where('role', 'conductor')
             ->where('estado', 'aprobado')
+            ->count();
+        $countUsersConductoresPendientes = $allUsers->where('role', 'conductor')
+            ->where('estado', 'pendiente')
             ->count();
         $countUsersConductoresCancelados = $allUsers->where('role', 'conductor')
             ->where('estado', 'cancelado')
@@ -50,9 +56,11 @@ class HomeController extends Controller
         $resource = collect([
             'user_solicitantes' => $countUsersSolicitantes,
             'user_solicitantes_aprobados' => $countUsersSolicitantesAprobados,
+            'user_solicitantes_pendientes' => $countUsersSolicitantesPendientes,
             'user_solicitantes_cancelados' => $countUsersSolicitantesCancelados,
             'user_conductores' => $countUsersConductores,
             'user_conductores_aprobados' => $countUsersConductoresAprobados,
+            'user_conductores_pendientes' => $countUsersConductoresPendientes,
             'user_conductores_cancelados' => $countUsersConductoresCancelados,
             'viajes_aprobados' => $countViajesAprobados,
             'viajes_pendientes' => $countViajesPendientes,
