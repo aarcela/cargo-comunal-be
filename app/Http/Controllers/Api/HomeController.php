@@ -39,6 +39,7 @@ class HomeController extends Controller
             'viajes_cancelados' => $countViajesCancelados,
             'transportistas_aprobados' => $countTransportesAprobados,
             'transportistas_pendientes' => $countTransportesPendientes,
+            'transportistas_todos' => $allTransportes->count()
         ]);
 
         return $this->sendResponse($resource, 'Envio de la información del Home con exito!');
